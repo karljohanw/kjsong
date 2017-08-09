@@ -1,0 +1,9 @@
+#!/usr/bin/python
+import sys
+#import kjwlib
+import kjwtxt
+import json
+
+txt = sys.stdin.read().splitlines()
+song = kjwtxt.txt_vec_to_kjsongs(txt)
+print(json.dumps(song,ensure_ascii=False,indent=2))

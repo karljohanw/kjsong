@@ -1,0 +1,10 @@
+#!/usr/bin/python
+
+import requests, sys, kjwtxt
+
+# if len(sys.argv) != 2:
+#     print("Wrong number of args!")
+#     exit(1)
+
+data = requests.get("http://127.0.0.1:5000/kjsong/api/v1.0/book/%s" % sys.argv[1]).json()
+print ('\n'.join(kjwtxt.kjbook_to_txt_vec(data)))

@@ -1,0 +1,3 @@
+#!/bin/bash
+
+../api/txt2jtuneparsepost < ${1}

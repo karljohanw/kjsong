@@ -1,0 +1,17 @@
+#!/usr/bin/python
+
+from kjwstat import *
+import sys
+
+if len(sys.argv)!=4:
+    print("usage: %s TEXT METRE LANG")
+    exit(1)
+    
+text=sys.argv[1]
+lang=sys.argv[3]
+metre=sys.argv[2]
+
+cnx = db_maintain_connect()
+ldict = get_lang_dict(cnx, lang)
+cnx.close()
+print(detect_verse_feets(text, metre, lang, ldict))

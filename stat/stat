@@ -1,0 +1,68 @@
+#!/usr/bin/python
+
+import requests, sys, re
+from kjwstat import detect_verse_feets, db_search_connect, get_lang_dict
+
+def get_first(d, i):
+    if not d:
+        return []
+    if i in d:
+        return d[i]
+    else:
+        first = [k for k in d.keys()][0]
+        return d[first]
+
+def get_dict_for_lyric(data, mydict, lang_dicts={}):
+    metres=(''.join([(metre['name']['string']*metre['times']) for metre in data['metre']])).strip(';').split(';')
+    for lyr in data['lyrics']:
+        intros = {ver['no']:ver['lines'] for ver in lyr['verses'] if ver['type']=='i'}
+        courus = {ver['no']:ver['lines'] for ver in lyr['verses'] if ver['type']=='c'}
+        if lyr['language'] not in lang_dicts:
+            cnx = db_search_connect()
+            lang_dicts[lyr['language']] = get_lang_dict(cnx, lyr['language'])
+            cnx.close()
+        for ver in lyr['verses']:
+            if ver['type']=='v':
+                lines = get_first(intros,ver['no'])+ver['lines']+get_first(courus,ver['no'])
+                if len(lines) == len(metres):
+                    for i in range(0, len(metres)):
+                        txts = [(lines[i]['text'], lines[i].get('syllable-diff',0))]+[(a['text'], a.get('syllable-diff',0)) for a in lines[i].get('alts',[])]
+                        for orig_txt,s_diff in txts:
+                            if s_diff==0: #do something about diff-syll
+                                txt = re.sub('[!?\.,“”„\;\:\-—\*_()]', ' ', orig_txt)
+                                txt = txt.replace(',',' ')
+                                txt = re.sub('[‘’]', "", txt)
+                                for t in detect_verse_feets(txt, metres[i], lyr['language'], lang_dicts[lyr['language']]):
+                                    for a,b in t:
+                                        if b=='X': b='U'
+                                        mydict.setdefault(lyr['language'],{}).setdefault(a,{}).setdefault(b,0)
+                                        mydict[lyr['language']][a][b]+=1
+                else:
+                    #do something FFS! not same number of metres as lines!
+                    print(("Verse no. %s lines for %s-%s are %s, metre lines are %s, wont continue" % (ver['no'],data['key'], lyr['language'], len(lines), len(metres))), file=sys.stderr)
+                    pass
+    
+if len(sys.argv) < 2:
+    print("Wrong number of args!")
+    exit(1)
+
+data = None
+if sys.argv[1]=='all':
+    data = requests.get("http://127.0.0.1:5000/kjsong/api/v1.0/songs").json()
+else:
+    data = requests.get("http://127.0.0.1:5000/kjsong/api/v1.0/song/%s" % sys.argv[1]).json()
+if not data:
+    print("No song found!")
+    exit(1)
+mydict={}
+lang_dicts={}
+if 'songs' in data:
+    for d in data['songs']:
+        get_dict_for_lyric(d, mydict, lang_dicts)
+else:
+    get_dict_for_lyric(data, mydict, lang_dicts)
+    
+for lang,stuff in mydict.items():
+    for word,sylls in stuff.items():
+        for syll,count in sylls.items():
+            print("%s\t%s\t%s\t%s\t%s\t1" % (lang, word, syll.count('X'), syll.count('U'),syll,))

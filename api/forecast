@@ -1,0 +1,68 @@
+#!/usr/bin/python2
+
+import nwalign
+import kjwlib
+from fractions import gcd
+from kjwgraph import *
+
+def is_greater_or_equal_than(a,b):
+    if a==b: return 0,0,0,0
+    alen, blen, afac, bfac, anl, bnl = len(a), len(b), 1, 1, a.count(';'), b.count(';')
+    while(afac*alen <= bfac*blen):
+        afac+=1
+    while(afac*alen >= bfac*blen):
+        bfac+=1
+    bfac-=1
+    aal, bal = nwalign.global_align(a*afac,b*bfac)
+    if(aal==a*afac and matching_semicolon(aal,bal) or b==';'):
+        return bfac,afac,aal.count('U')-bal.count('U'),aal.count('X')-bal.count('X')
+    g = gcd(anl,bnl)
+    aal, bal = nwalign.global_align(a*(bnl//g),b*(anl//g))
+    if(aal==a*(bnl//g) and matching_semicolon(aal,bal)):
+        return anl//g,bnl//g,aal.count('U')-bal.count('U'),aal.count('X')-bal.count('X')
+    return 0,0,0,0
+
+def is_equal_to(a,b):
+    alen, blen = len(a)-a.count(';'), len(b)-b.count(';')
+    if alen!=0 and blen!=0 and a!=b and len(a)>len(b):
+        if (alen<blen):
+            i,j = blen//alen, 1
+        else:
+            i,j = 1, alen//blen
+        aal, bal = nwalign.global_align(a*i, b*j)
+        if matching_letters(aal, bal) and (aal.count('-')==0 or bal.count('-')==0):
+            return j,i
+    return 0,0
+        
+def create_new_metre_graph(metres):
+    edges = {}
+    for m in metres.keys():
+        for n in metres.keys():
+            i,j,u,x = is_greater_or_equal_than(metres[n][1],metres[m][1])
+            if not (i==0 and j==0) and (u>=0 and x>=0):
+                edges.setdefault(m,{})[n] = (i,j,u,x)
+    return edges
+
+def append_equals_graph(metres, edges):
+    for m in metres.keys():
+        for n in metres.keys():
+            a,b = is_equal_to(metres[n][1], metres[m][1])
+            if not (a==0 and b==0):
+                edges.setdefault(m,{})[n] = (a,b,0,0)
+                edges.setdefault(n,{})[m] = (a,b,0,0)
+
+debug=False
+
+cnx = kjwlib.db_search_connect()
+metres = read_metres(cnx)
+cnx.close()
+new_edges = create_new_metre_graph(metres)
+setminus_edges(new_edges)
+append_equals_graph(metres, new_edges)
+if debug:
+    print_dict(new_edges)
+    exit(0)
+cnx = kjwlib.db_maintain_connect()
+replace_graph(cnx, new_edges)
+cnx.commit()
+cnx.close()

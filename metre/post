@@ -1,0 +1,6 @@
+#!/bin/bash
+
+CMD=POST
+NAME=metre
+
+curl -i -X ${CMD} "http://127.0.0.1:5000/kjsong/api/v1.0/${NAME}/${1}/${2}"

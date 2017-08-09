@@ -1,0 +1,17 @@
+#!/usr/bin/python
+
+import requests, sys, kjwtxt
+
+if len(sys.argv) < 2:
+    print("Wrong number of args!")
+    exit(1)
+
+data = requests.get("http://127.0.0.1:5000/kjsong/api/v1.0/song/%s" % sys.argv[1]).json()
+try:
+    comp = False if sys.argv[2][0]=='0' or sys.argv[2].lower()=='false' else True
+    redun = False if sys.argv[3][0]=='0' or sys.argv[3].lower()=='false' else True
+    force = [] if sys.argv[4] == '0' else [int(i) for i in sys.argv[4].split(',')]
+    print (''.join(kjwtxt.kjsong_to_txt(data, comp, redun, force)))
+except:
+    print ('\n'.join(kjwtxt.kjsong_to_txt_vec(data)))
+

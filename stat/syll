@@ -1,0 +1,11 @@
+#!/usr/bin/python
+
+import sys
+from countsyl import count_syllables
+from kjwstat import _vowels
+
+if len(sys.argv) != 2:
+    print("Wrong number of args!")
+    exit(1)
+
+print(count_syllables(sys.argv[1],_vowels))

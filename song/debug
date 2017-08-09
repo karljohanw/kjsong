@@ -1,0 +1,15 @@
+#!/bin/bash
+
+[ -z ${CMP} ] && CMP='true'
+[ -z ${RED} ] && RED='false'
+[ -z ${FRC} ] && FRC='0'
+
+if [ ${#} -ne 1 ]; then
+    mysql -usearcher -ppassword kjsong -B -e "SELECT lyric,lyric_key FROM Lyric ORDER BY lyric_key" | tail -n +2
+    exit
+fi
+
+cd $(dirname ${BASH_SOURCE[0]})
+../api/dbg_song ${1} ${CMP} ${RED} ${FRC} | \
+    sed $'s/\(^\|“\|\s\|\*\)_\([^_]*\)_\(\s\|!\|?\|\*\|”\|,\|\\.\|$\|{\)/\\1\e[4m\\2\e[24m\\3/g' | \
+    sed $'s/\*\*\([^\*]*\)\*\*/\e[1m\\1\e[0m/g' | sed $'s/\*\([^\*]*\)\*/\e[3m\\1\e[23m/g' | less -FRX

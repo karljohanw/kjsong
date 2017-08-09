@@ -1,0 +1,15 @@
+#!/usr/bin/python
+
+import kjwstat,sys
+
+if len(sys.argv) != 3:
+    print("Wrong number of args!")
+    exit(1)
+
+cnx = kjwstat.db_maintain_connect()
+my_dict = kjwstat.get_lang_dict(cnx,sys.argv[1].lower())
+cnx.close()
+try:
+    print(my_dict[sys.argv[2].lower()])
+except KeyError:
+    print("Word not found in dict!!")

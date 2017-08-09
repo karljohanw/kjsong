@@ -1,0 +1,7 @@
+#!/bin/bash
+
+TABLES="`ls -1 kjsong.new/ | sed 's/.txt//g'`"
+
+for TABLE in ${TABLES}; do
+    mysql -uupdater -ppassword kjsong -e "LOAD DATA LOCAL INFILE \"${PWD}/kjsong.new/${TABLE}.txt\" INTO TABLE ${TABLE} IGNORE 1 LINES"
+done

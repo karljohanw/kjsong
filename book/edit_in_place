@@ -1,0 +1,10 @@
+#!/bin/bash
+
+TMP_TXT_FILE="/tmp/kjsong${$}.txt"
+TMP_JSON_FILE="/tmp/kjsong${$}.json"
+
+../api/dbg_book ${1} > ${TMP_TXT_FILE}
+${EDITOR:-emacs} ${TMP_TXT_FILE}
+../api/txt2jbookparsepost < ${TMP_TXT_FILE} > ${TMP_JSON_FILE}
+[ -z $CMD ] && CMD=PUT
+curl -i -H "Content-Type: application/json" -d @${TMP_JSON_FILE} -X ${CMD} http://127.0.0.1:5000/kjsong/api/v1.0/book

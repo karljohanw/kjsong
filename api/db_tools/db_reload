@@ -1,0 +1,9 @@
+#!/bin/bash
+
+TABLES="`mysql -usearcher -ppassword kjsong -B -e 'SHOW TABLES' | grep -v Tables_in_kjsong`"
+
+for TABLE in ${TABLES}; do
+    mysql -uupdater -ppassword kjsong -B -e "DROP TABLE ${TABLE}"
+done
+
+cat kjsong.sql | mysql --user=root -p kjsong

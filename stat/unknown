@@ -1,0 +1,89 @@
+#!/usr/bin/python
+
+import kjwstat
+import requests, sys, re
+import statistics
+from collections import OrderedDict
+from viterbi import viterbi
+
+def kjwmode(lst):
+    while lst:
+        try:
+            return statistics.mode(sorted(lst))
+        except statistics.StatisticsError:
+            lst=lst[:-1]
+
+def get_sign(metres, idx, sign):
+    return sum([1 for metre in metres if metre[idx]==sign])/len(metres)
+
+def get_char(a,b,c, limit=0.05):
+    if c>0.95:
+        return '!'
+    if a==b:
+        return '?'
+    if a>=b:
+        return 'x'
+    else:
+        return 'u'
+
+def generate_mdict(typ, ldict={}):
+    mdict = {}
+    for lyr in data['lyrics']:
+        if lyr['language'] not in ldict:
+            cnx = kjwstat.db_maintain_connect()
+            ldict[lyr['language']] = kjwstat.get_lang_dict(cnx,lyr['language'])
+            cnx.close()
+        if ldict[lyr['language']] and lyr['language'] not in ('spa','ita','rus','tpo'):
+            for ver in lyr['verses']:
+                if ver['type']==typ:
+                    for line in ver['lines']:
+                        txts=([line['text']]+[l['text'] for l in line.get('alts',[])]) if not line.get('redundant',False) else []
+                        for orig_txt in txts:
+                            txt = re.sub('[!?\.,“”„\;\:\-—\*_()]', ' ', orig_txt)
+                            txt = txt.replace(',',' ')
+                            txt = re.sub('[‘’]', "", txt)
+                            cnx = kjwstat.db_maintain_connect()
+                            allocs = kjwstat.get_ml_allocation(cnx, txt, ldict[lyr['language']], lyr['language'])
+                            cnx.close()
+                            for alloc in allocs:
+                                if 'U' in alloc or 'X' in alloc:
+                                    mdict.setdefault(line['no'],[]).append(alloc)
+    return mdict
+
+def mdict2odict(mdict):
+    ndict = {no:kjwmode(sorted([len(m) for m in metres])) for no,metres in mdict.items()}
+    rdict = {no: [metre for metre in metres if len(metre)==ndict[no] and 'U' in metre and 'X' in metre] for no,metres in mdict.items()}
+    odict = {no: ''.join([get_char(get_sign(metres, i,'X'),get_sign(metres, i,'U'),get_sign(metres, i,'!')) for i in range(0,len(metres[0]))]) for no,metres in rdict.items()}
+    return odict
+
+def viterbi_cover(odict):
+    states="XU"
+    start_probab={'U':0.5,'X':0.5}
+    trans_probab={'U':{'U':0.4999,'X':0.5001},'X':{'U':0.95,'X':0.05}}
+    emiss_probab={'U':{'u':0.7,'x':0.1,'?':0.1,'!':0.1},'X':{'x':0.7,'u':0.1,'?':0.1,'!':0.1}}
+    vdict = {}
+    for no,obs in odict.items():
+        if obs[-3]=='u' and obs[-2]=='u':
+            obs=obs[:-1]+'x'
+        opt,prob = viterbi(obs,states,start_probab,trans_probab,emiss_probab)
+        if opt[-3]=='U' and opt[-2]=='U':
+            opt=opt[:-1]+'X'
+        vdict[no]=opt
+    return vdict
+                
+data = requests.get("http://127.0.0.1:5000/kjsong/api/v1.0/song/%s" % sys.argv[1]).json()
+if not data:
+    print("No song found!")
+    exit(1)
+
+
+print(data['key'])
+ldict = {}
+for typ in 'ivc':
+    mdict = generate_mdict(typ,ldict)
+    odict = mdict2odict(mdict)
+    if odict:
+        print(typ)
+        print(odict)
+        vdict = viterbi_cover(odict)
+        print(vdict)

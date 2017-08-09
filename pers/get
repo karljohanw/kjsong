@@ -1,0 +1,8 @@
+#!/bin/bash
+
+if [ ${#} -ne 1 ]; then
+    mysql -usearcher -ppassword kjsong -B -e "SELECT person,person_key FROM Person ORDER BY person_key" | tail -n +2
+    exit
+fi
+
+curl -s -i -H -X GET http://127.0.0.1:5000/kjsong/api/v1.0/person/${1} | tail -n+7 | source-highlight --failsafe -f esc --lang-def=json.lang --style-file=esc.style

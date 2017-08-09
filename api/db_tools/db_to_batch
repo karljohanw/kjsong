@@ -1,0 +1,11 @@
+#!/bin/bash
+
+SFX="`date +%F`.${$}"
+TABLES="`mysql -usearcher -ppassword kjsong -B -e 'SHOW TABLES' | grep -v Tables_in_kjsong`"
+
+mkdir -p kjsong.${SFX}
+for TABLE in ${TABLES}; do
+    mysql -usearcher -ppassword kjsong -B -e "SELECT * FROM ${TABLE}" > kjsong.${SFX}/${TABLE}.txt
+    sed -i 's/NULL/\\N/g' kjsong.${SFX}/${TABLE}.txt
+done
+

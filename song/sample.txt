@@ -1,0 +1,529 @@
+amazing_grace
+CM-2
+%god,grace,hymn
+
+eng
+@newton_john 1779 v.1-3,5-6 1725-1809 John Henry Newton;John H. Newton;J.H. Newton;J. Newton
+@rees_john_p 1859 v.4 1828-1900 John P. Rees;J.P. Rees
+1v
+Amazing grace (how sweet the sound)
+ -that saved a wretch like me!
+I once was lost, but now am found
+ -was blind, but now I see\alternative%was bound, but now I’m free
+2v
+‘Twas grace that taught my heart to fear
+ -and grace my fears relieved
+How precious did that grace appear
+ -the hour I first believed!
+3v
+Through many dangers, toils and snares
+ -I have already come
+‘Tis grace has brought me safe thus far
+ -and grace will lead me home
+4v
+The LORD has promised good to me
+ -his word my hope secures
+He will my shield and portion be
+ -as long as life endures
+5v
+Yes, when this flesh and heart shall fail
+ -and mortal life shall cease
+I shall possess, within the veil
+ -a life of joy and peace
+6v
+The earth shall soon dissolve like snow\alternative%The world shall soon to ruin go
+ -the sun forbear to shine\alternative%the sun refuse to shine
+but God, who called me here below
+ -will be for ever mine
+7w
+When we’ve been there ten thousand years
+ -bright shining as the sun
+we’ve no less days to sing God’s praise
+ -than when we first begun
+8w
+Amazing grace has set me free
+ -to touch, to taste, to feel
+the wonders of accepting love
+ -have made me whole and real
+
+rus
+1v
+О, Благодать, спасен Тобой
+ -я из пучины бед
+Был мертв и чудом стал живой
+ -был слеп и вижу свет
+2v
+Сперва внушила сердцу страх
+ -затем - дала покой
+Я скорбь души излил в слезах
+ -твой мир течет рекой
+3v
+Прошел немало я скорбей
+ -невзгод и черных дней
+но ты всегда была со мной
+ -ведёшь меня домой
+4v
+Словам Господним верю я
+ -моя вся крепость в них:
+Он - верный щит, Он - часть моя
+ -во всех путях моих
+5v
+Когда же плоть моя умрет
+ -придет борьбе конец
+меня в небесном доме ждет
+ -и радость, и венец
+6v
+Пройдут десятки тысяч лет
+ -забудем смерти тень
+а Богу также будем петь
+ -как в самый первый день
+7v
+Пройдут десятки тысяч лет
+ -забудем смерти тень
+А Богу так же будем петь
+ -как в самый первый день
+
+swe
+@westrin_kj 2014 n/a 1989- Karl Johan Westrin;K.J. Westrin
+#Den vanligaste svenska översättningarna, bl.a. den av Andreas Frostensson, kan vara copyrightskyddade a.t.m. (2016).
+1v
+Otrolig nåd (vad vackert namn)
+ -mig frälst, ett uselt vrak!
+Jag vilsen var, men nu i hamn#“hamn” och “vrak” f.i.tl. (avs. som ref. till J.Newtons förflutna till sjöss)
+ -var blind, men ser nu klart
+2v
+Din nåd mig fruktan bringat har
+ -och nåd bort fruktan slår
+Så grann din nåd blir uppenbar
+ -den timma tron mig når
+3v
+Jag har i faror, knog och slit
+ -riskerat liv och lem
+Din nåd har fört mig säkert hit
+ -och skall mig föra hem
+4v
+Ty Herren lovat gott åt mig
+ -hans ord mitt hopp står bi
+han var min sköld och lans i krig
+ -så skola ock förbli
+5v
+Ja, när mitt kött och hjärta dör
+ -tar livet slut däri
+så skall jag uppnå ovanför
+ -ett liv i harmoni
+6v
+När jorden smultit bort som snö
+ -och solen slocknat skral
+jag ändå äro Herrens mö
+ -ty han har hört mitt kval
+7w
+När vi i tiotusen år
+ -lyst där, så starkt som sol
+Vårt lov till Herren än består
+ -som första årets fjol
+===
+vaart_land
+CM-1;LM-2;CM-1
+%anthem,patience,patriotic,poverty,war
+
+swe
+@runeberg_jl 1848 n/a 1804-1877 Johan Ludwig Runeberg;J.L. Runeberg
+1v
+Vårt land, vårt land, vårt fosterland!
+ -Ljud högt, o dyra ord!
+Ej lyfts en höjd mot himlens rand
+-ej sänks en dal, ej sköljs en strand
+mer älskad än vår bygd i nord
+ -än våra fäders jord!
+2v
+Vårt land är fattigt, skall så bli
+ -för den, som guld begär
+En främling far oss stolt förbi
+-Men detta landet älska vi:
+För oss med moar, fjäll och skär
+ -ett guldland dock det är!
+3v
+Vi älska våra strömmars brus
+ -och våra bäckars språng!
+Den mörka skogens dystra sus
+-vår stjärnenatt, vårt sommarljus
+Allt, allt, vad här som syn, som sång
+ -vårt hjärta rört en gång!
+4v
+Här striddes våra fäders strid
+ -med tanke, svärd och plog
+Här, här, i klar som mulen tid
+-med lycka hård, med lycka blid
+Det finska folkets hjärta slog
+ -här bars, vad det fördrog
+5v
+Vem täljde väl de striders tal
+ -som detta folk bestod?
+Då kriget röt från dal till dal
+-då frosten kom med hungerns kval
+Vem mätte allt dess spillda blod
+ -Och allt dess tålamod?
+6v
+Och det var här, det blodet flöt?
+ -Ja, här för oss det var!
+Och det var här, sin fröjd det njöt
+-och det var här, sin suck det göt
+Det folk, som våra bördor bar
+ -långt före våra dar!
+7v
+Här är oss ljuvt, här är oss gott!
+ -Här är oss allt beskärt
+Hur ödet kastar än vår lott
+-ett land, ett fosterland vi fått
+Vad finns på jorden mera värt
+ -att hållas dyrt och kärt?
+8v
+Och här och här är detta land
+ -vårt öga ser det här!
+Vi kunna sträcka ut vår hand
+-och visa glatt på sjö och strand
+och säga: Se det landet där!
+ -Vårt fosterland det är!
+9v
+Och fördes vi att bo i glans
+ -bland guldmoln i det blå
+Och blev vårt liv en stjärnedans
+-där tår ej göts, där suck ej fanns
+till detta arma land ändå
+ -vår längtan skulle stå
+10v
+O land, du tusen sjöars land
+ -där sång och trohet byggt!
+Där livets hav oss gett en strand!
+-Vår forntids land, vår framtids land!
+Var för din fattigdom ej skyggt
+ -var fritt, var glatt, var tryggt!
+11v
+Din blomning, sluten än i knopp
+ -skall mogna ur sitt tvång
+Se, ur vår kärlek skall gå opp
+-ditt ljus, din glans, din fröjd, ditt hopp
+Och högre klinga skall en gång
+ -vår fosterländska sång!
+
+eng
+@krook_anna 1906 n/a 1850-1926 Anna Sofia Krook;Anna S. Krook;Anna Krook;A.S. Krook;A. Krook
+#There exists several other english (singable) translations as well, complete or incomplete. The one presented here is probably the most popular.
+1v
+Our land, our land, our Fatherland!
+ -Ring out, dear word, oh sound!
+No rising hill, or mountain grand
+-no sloping dale, no northern strand
+there is, more loved, to be found
+ -than this — our fathers’ ground!
+2v
+Our land is poor, and so shall be
+ -to him who gold will crave
+The strangers proudly pass, but we
+-shall ever love this land, we see
+in moor, and fell, and isle and wave
+ -a golden land, so brave!
+3v
+We love our rippling brooks, so bright
+ -our gushing streams, so strong
+the whisper of dark woods, at night
+-our starry skies, our summer light
+all, all that we, in sight and song
+ -have felt and lived among!
+4v
+Here fought our fathers, without fear
+ -with sword, and plough, and thought
+And here, in clouded times, and clear
+-with fortune in their front or rear
+their Finnish hearts have beat, and wrought
+ -and borne what bear they ought
+5v
+Who tells, of all the fights, the tale
+ -in which this folk withstood?
+When war did rage from dale to dale
+-when frost set in, with hunger’s wail?
+Who measured all their pouring blood
+ -and all their patience good?
+6v
+And it was here their blood was shed
+ -for us, here, on this shore!
+And it was here their joys were bred
+-here, that their sighs were heaved and fled
+that people’s who our burdens bore
+ -before us, long before
+7v
+Here it is sweet and good, we wot
+ -all, too, is giv’n us here
+However fate may cast our lot
+-a land, a fatherland, we’ve got
+Will there a thing on earth appear
+ -more worthy, to hold dear?
+8v
+And here’s, and here’s this fatherland
+ -here every eye it sees!
+And we can stretch a pointing hand
+-to show, with joy, its sea and strand
+and say: Behold this country, this
+ -Our Fatherland it is!
+9v
+And if we once were made to rise
+ -to gold clouds, from below
+And if we moved in starry skies
+-where no one weeps, where no one sighs
+to this poor lonely country, though
+ -our longing hearts would go
+10v
+Oh land, the thousand lakes’ own land
+ -of faith, and lay, and glee!
+Where life’s main sea gave us a strand
+-our fore-time’s land, our future’s land
+Shy of thy poorness, never be
+ -be calm, be glad, be free!
+11v
+Thy blossom, hidden now from sight
+ -Shall burst its bud ere long!
+Lo! From our love, shall rise aright
+-Thy sun, thy hope, thy joy, thy light
+And higher, once, more full and strong
+ -Shall ring Our Country’s song!
+
+fin
+@krohn_julius 1867 n/a 1835-1888 Julius Leopold Fredrik Krohn;Julius L.F. Krohn;Julius Krohn;J. Krohn
+@cajander_pe 1889 n/a 1846-1913 Paavo Eemil Cajander;Paavo E. Cajander;P.E. Cajander
+1v
+Oi maamme, Suomi, synnyinmaa
+ -soi, sana kultainen!
+Ei laaksoa, ei kukkulaa
+-ei vettä rantaa rakkaampaa
+kuin kotimaa tää pohjoinen
+ -maa kallis isien!
+2v
+On maamme köyhä, siksi jää
+ -jos kultaa kaivannet
+Sen vieras kyllä hylkäjää
+-mut meille kallein maa on tää
+sen salot, saaret, manteret
+ -ne meist on kultaiset
+3v
+Ovatpa meille rakkahat
+ -koskemme kuohuineen
+ikuisten honkain huminat
+-täht’yömme, kesät kirkkahat
+kaikk’kuvineen ja lauluineen
+ -mi painui sydämeen
+4v
+Täss auroin, miekoin, miettehin
+ -isämme sotivat
+kun päivä piili pilvihin
+-tai loisti onnen paistehin
+täss Suomen kansan vaikeimmat
+ -he vaivat kokivat
+5v
+Tään kansan taistelut ken voi
+ -ne kertoella, ken?
+Kun sota laaksoissamme soi
+-ja halla näläntuskan toi
+ken mittasi sen hurmehen
+ -ja kärsimykset sen?
+6v
+Täss on sen veri virrannut
+ -hyväksi meidänkin
+täss iloaan on nauttinut
+-ja murheitansa huokaillut
+se kansa, jolle muinaisin
+ -kuormamme pantihin
+7v
+Tääll’ olo meill on verraton
+ -ja kaikki suotuisaa
+vaikk onni mikä tulkohon
+-maa isänmaa se meillä on
+Mi maailmass on armaampaa
+ -ja mikä kalliimpaa?
+8v
+Ja tässä, täss’ on tämä maa
+ -sen näkee silmämme
+me kättä voimme ojentaa
+-ja vettä rantaa osoittaa
+ja sanoa: kas tuoss’ on se
+ -maa armas isäimme
+9v
+Jos loistoon meitä saatettais
+ -vaikk’ kultapilvihin
+mis itkien ei huoattais
+-vaan tärkein riemun sielu sais
+ois tähän köyhäänkotihin
+ -halumme kuitenkin
+10v
+Totuuden, runon kotimaa
+ -maa tuhatjärvinen
+miss’ elämämme suojan saa
+-sa muistojen, sa toivon maa
+ain ollos, onnes tyytyen
+ -vapaa ja iloinen
+11v
+Sun kukoistukses kuorestaan
+ -kerrankin puhkeaa
+viel lempemme saa nousemaan
+-sun toivos, riemus loistossaan
+ja kerran, laulus synnyinmaa
+ -korkeemman kaiun saa
+
+ger
+@eigenbrodt_w 1899 n/a 1860-1921 Wolrad Eigenbrodt
+1v
+O Heimat, Heimat, unser Land
+ -kling laut, du teures Wort!
+Kein Land, so weit der Himmelsrand
+-kein Land mit Berg und Tal und Strand
+wird mehr geliebt als unser Nord
+ -hier unsrer Väter Hort!
+2v
+Dies Land ist arm und mag so sein
+ -für den, der Gold begehrt
+Kehrt auch kein stolzer Fremdling ein
+-wir sind es, die das Herz ihm weihn
+für uns mit Wald und Fels und Strand
+ -ist’s doch ein reiches Land
+3v
+Wir lieben unsrer Ströme Schall
+ -und unsrer Bäche Sprung
+des dunklen Waldes düstren Hall
+-das Sommerlicht, das Sternenall
+Ja, Schein und Schall, den ewig jung
+ -umfängt Erinnerung
+4v
+Hier ging der Väter Kampf und Streit
+ -mit Schwert und Geist und Pflug
+Im Lichte wie in Dunkelheit
+-in rauher wie in milder Zeit
+Hier unsres Volkes Herze schlug
+ -hier trug es, was es trug
+5v
+Wer zählte seiner Kämpfe Zahl
+ -gekämpft mit Todesmut
+Wenn Kriegsnot schrie von Tal zu Tal
+-wenn Kälte kam mit Hungersqual
+Wer mäße sein vergossnes Blut
+ -und seinen Duldermut?
+6v
+Und hier, auf diesem Grunde, floss
+ -dies Herzblut, uns geweiht
+Hier war es, wo es Glück genoss
+-hier, wo es Tränen auch vergoss
+der Väter Volk, für uns im Streit
+ -lang, lang vor unsrer Zeit
+7v
+Hier ist uns alles traut bekannt
+ -und alles hier beschert
+Was auch verhängt des Schicksals Hand
+-uns ward ein Land, ein Vaterland!
+Was wäre mehr auf Erden wert
+ -dass man es liebt und ehrt?
+8v
+Und um uns her lacht dieses Land
+ -dem Blick so traut und nah
+Wir heben freudig unsre Hand
+-und weisen rings auf See und Strand
+und rufen: „Seht, dies alles da
+ -Ist unsre Heimat, ja!“
+9v
+Und wohnten wir im Wolkenglanz
+ -und blauem Himmelsschein
+Wär’ unser Sein ein Sternentanz
+-in tränenloser Wonnen Kranz
+Wir sehnten doch uns unverwandt
+ -nach diesem armen Land
+10v
+O Land, der tausend Seen Land
+ -des Sangs, der Treue Mark
+Im Sturm des Lebens unser Strand
+-der Vorzeit und der Zukunft Land
+Sei stolz, ob auch dein Boden karg
+ -sei frei, sei froh, sei stark!
+11v
+Einst ringt sich deine Blüte los
+ -reif aus der Knospe Zwang
+Ja, einst aus unsrer Liebe Schoß
+-geht auf dein Hoffen, licht und groß
+Und unser Vaterlandsgesang
+ -erschallt in höherm Klang
+
+rus
+@blok_alexandr 1900 n/a 1880-1921 Алекса́ндр Алекса́ндрович Бло́к;Алекса́ндр Бло́к;А. Бло́к
+1v
+Наш край, наш край, наш край родной
+ -о, звук, всех громче слов!
+Чей кряж, растущий над землёй
+-чей брег, встающий над водой
+Любимей гор и берегов
+ -родной земли отцов?
+2v
+Ступай, надменный чужевер
+ -Ты звону злата рад!
+Наш бедный край угрюм и сер
+-но нам узоры гор и шхер
+Отрада, слаще всех отрад
+ -неоценённый клад
+3v
+Нам люб потоков наших рев
+ -ручьёв бегущих звон
+Однообразный шум лесов
+-свет звёзд, прозрачность вечеров
+всё, всё, чем слух был поражён
+ -чем взор был полонён
+4v
+Здесь с мыслью, с плугом и с мечом
+ -отцы ходили в бой
+Здесь ночь за ночью, день за днём
+-народный дух пылал огнем
+В согласье с доброю судьбой
+ -в борьбе с судьбою злой
+5v
+Кто счёт народным битвам вёл
+ -когда всё вновь и вновь
+Война неслась из дола в дол
+-мороз и глад за ним пришёл
+Кто мерил пролитую кровь
+ -терпенье и любовь?
+6v
+Да, здесь, вот здесь та кровь текла
+ -за нас текла тогда
+Душа народа здесь цвела
+-и тяжким вздохом изошла
+в давно прошедшие года
+ -под бременем труда
+7v
+Здесь — наше всё, здесь — светлый рай
+ -Отрада наших дней!
+Как рок жестокий ни пытай
+-Он всё при нас, родимый край
+Что ж нам любить ещё полней
+ -святей и горячей?
+8v
+И здесь, и там блуждает взор
+ -Я руку протяну
+Взгляни на радостный простор
+-вон берега, вон рябь озёр
+взгляни на всё, как я взгляну
+ -на милую страну
+9v
+И пусть на нас прольётся свет
+ -из тверди золотой
+Пусть станет жизнь игрой планет
+-где слёз не льют, где вздохов нет
+а всё — убогий край родной
+ -мы помянём с тоской
+10v
+О, край, многоозёрный край
+ -где песням нет числа
+От бурь оплот, надежды рай
+-наш старый край, наш вечный край
+и нищета твоя светла
+ -смелей, не хмурь чела!
+11v
+Он расцветёт, твой бедный цвет
+ -стряхнув позор оков
+и нашей верности обет
+-Тебе дарует блеск и свет
+и наша песнь домчит свой зов
+ -до будущих веков

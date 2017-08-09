@@ -1,0 +1,4 @@
+#!/bin/bash
+
+CMD=PUT
+curl -i -H "Content-Type: application/json" -d @${2} -X ${CMD} http://127.0.0.1:5000/kjsong/api/v1.0/tune/${1}

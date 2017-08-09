@@ -1,0 +1,9 @@
+#!/usr/bin/python
+import sys
+#import kjwlib
+import kjwtxt
+import json
+
+txt = sys.stdin.read().splitlines()
+tune = kjwtxt.txt_vec_to_kjtunes(txt)
+print(json.dumps(tune,ensure_ascii=False,indent=2))

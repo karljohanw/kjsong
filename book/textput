@@ -1,0 +1,6 @@
+#!/bin/bash
+
+cd $(dirname ${BASH_SOURCE[0]})
+../api/txt2jbookparsepost < ${2} > /tmp/kjsong${$}.json
+[ -z $CMD ] && CMD=PUT
+curl -i -H "Content-Type: application/json" -d @/tmp/kjsong${$}.json -X ${CMD} http://127.0.0.1:5000/kjsong/api/v1.0/book/${1}

@@ -1,0 +1,5 @@
+#!/bin/bash
+
+./lily_tune ${@} > /tmp/${1}${$}.ly
+lilypond -o /tmp/${1} /tmp/${1}${$}.ly
+timidity /tmp/${1}.midi

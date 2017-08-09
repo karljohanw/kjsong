@@ -1,0 +1,9 @@
+#!/bin/bash
+
+CMD=PATCH
+if [ ${#} -eq 4 ]; then
+    echo "HEHE"
+    curl -i -X ${CMD} http://127.0.0.1:5000/kjsong/api/v1.0/song/${1}/${2}/${3}/merge/${4}
+else
+    curl -i -X ${CMD} http://127.0.0.1:5000/kjsong/api/v1.0/song/${1}/${2}/merge/${3}
+fi

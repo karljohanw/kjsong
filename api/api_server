@@ -1,0 +1,428 @@
+#!/usr/bin/python
+from flask import Flask, jsonify, request, abort, make_response
+from flask_httpauth import HTTPBasicAuth
+
+import kjwlib
+import json
+
+app = Flask(__name__)
+
+auth = HTTPBasicAuth()
+superAuth = HTTPBasicAuth()
+
+def kjw_jsonify(obj, my_indent=2):
+    return app.response_class(json.dumps(obj, ensure_ascii=False, indent=my_indent),
+                              mimetype='application/json; charset=utf-8')
+
+@auth.get_password
+def get_password(username):
+    if username == 'insert':
+        return 'password'
+    return None
+
+@superAuth.get_password
+def get_password(username):
+    if username == 'super':
+        return 'password'
+    return None
+
+@app.errorhandler(400)
+def bad_request(error):
+    return make_response(jsonify({'error': 'Bad request'}), 400)
+
+@auth.error_handler
+def unauthorized():
+    return make_response(jsonify({'error': 'Unauthorized access'}), 401)
+
+@auth.error_handler
+def unauthorized():
+    return make_response(jsonify({'error': 'Unauthorized'}), 403)
+
+@superAuth.error_handler
+def unauthorized():
+    return make_response(jsonify({'error': 'Unauthorized SuperUser'}), 403)
+
+@app.errorhandler(404)
+def not_found(error):
+    return make_response(jsonify({'error': 'Not found'}), 404)
+
+@app.errorhandler(501)
+def not_implemented(error):
+    return make_response(jsonify({'error': 'Not implemented'}), 501)
+
+@app.route('/kjsong/api/v1.0/songs', methods=['GET'])
+def get_all_songs():
+    copy = request.json['copyrighted'] if request.json and 'copyrighted' in request.json else True
+    try:
+        cnx = kjwlib.db_search_connect()
+        songs = kjwlib.get_songs(cnx, {'exclude-matches':True})
+        #for song in songs: kjwlib.omit_royalty_requirement_verses(song)
+        cnx.close()
+        return kjw_jsonify({'songs': songs})
+    except Exception as e:
+        print(e)
+        abort(404)
+
+@app.route('/kjsong/api/v1.0/song', methods=['GET'])
+def get_songs():
+    copy = request.json['copyrighted'] if request.json and 'copyrighted' in request.json else True
+    try:
+        cnx = kjwlib.db_search_connect()
+        if request.json:
+            songs = kjwlib.get_songs(cnx, request.json)
+        else:
+            songs = kjwlib.get_songs(cnx)
+            #Do some error here really?
+        #for song in songs: kjwlib.omit_royalty_requirement_verses(song)
+        cnx.close()
+        return kjw_jsonify({'songs': songs})
+    except Exception as e:
+        print(e)
+        abort(404)
+
+@app.route('/kjsong/api/v1.0/song/<string:song_key>', methods=['GET'])
+def get_song(song_key, no_royalty=False):
+    lang = request.json['language'] if request.json and 'language' in request.json else None
+    var = request.json['variant'] if request.json and 'variant' in request.json else None
+    copy = request.json['copyrighted'] if request.json and 'copyrighted' in request.json else True
+    try:
+        cnx = kjwlib.db_search_connect()
+        if request.json:
+            song = kjwlib.get_song(cnx, song_key, request.json)
+        else:
+            song = kjwlib.get_song(cnx, song_key)
+        cnx.close()
+        if no_royalty:
+            kjwlib.kjwtools.omit_royalty_requirement_verses(song)
+        return kjw_jsonify(song)
+    except Exception as e:
+        print(type(e))
+        print(e)
+        abort(404)
+
+@app.route('/kjsong/api/v1.0/song/<string:song_key>/noroyalty', methods=['GET'])
+def get_no_royalty_song(song_key):
+    return get_song(song_key, True)
+        
+@app.route('/kjsong/api/v1.0/song/<string:lyric_key>/<string:lang>/merge/<string:oldvar>', methods=['PATCH'])
+@app.route('/kjsong/api/v1.0/song/<string:lyric_key>/<string:lang>/<string:var>/merge/<string:oldvar>', methods=['PATCH'])
+def move_var_to_alt(lyric_key=None,lang=None,var='',oldvar=None):
+    cnx = kjwlib.db_maintain_connect()
+    try:
+        kjwlib.var_to_alt(cnx, lyric_key, lang, var, oldvar)
+        cnx.commit()
+        cnx.close()
+        return make_response(jsonify({'status':'ok'}))
+    except Exception as e:
+        cnx.rollback()
+        cnx.close()
+        print(type(e))
+        print(e)
+        abort(400)
+
+
+@app.route('/kjsong/api/v1.0/song/<string:song_key>', methods=['PUT','POST','PATCH'])
+def update_song(song_key=None):
+    if not request.json or ('key' not in request.json and not song_key):
+        abort(400)
+    cnx = kjwlib.db_maintain_connect()
+    try:
+        if not 'key' in request.json:
+            request.json['key'] = song_key
+        if request.method != 'POST':
+            if request.method == 'PUT':
+                kjwlib.kjwtools.clean_lyrics(cnx, song_key)
+                #pass
+            kjwlib.put_song(cnx, request.json)
+        else:
+            kjwlib.post_song(cnx, request.json)
+        cnx.commit()
+        cnx.close()
+        cnx = kjwlib.db_search_connect()
+        song = kjwlib.get_song(cnx, request.json['key'])
+        cnx.close()
+        return kjw_jsonify(song)
+    except Exception as e:
+        cnx.rollback()
+        cnx.close()
+        print(type(e))
+        print(e)
+        abort(404)
+
+@app.route('/kjsong/api/v1.0/song/<string:song_key>/tags/<string:tags>', methods=['PUT','PATCH'])
+def append_tag(song_key=None, tags=None):
+    cnx = kjwlib.db_maintain_connect()
+    try:
+        tag_list = [t.strip().lower() for t in tags.split(',')]
+        kjwlib.append_tags(cnx, song_key, tag_list, request.method == 'PUT')
+        cnx.commit()
+        cnx.close()
+        return make_response(jsonify({'status':'ok','appended':tag_list}))
+    except Exception as e:
+        cnx.rollback()
+        cnx.close()
+        print(type(e))
+        print(e)
+        abort(400)
+
+@app.route('/kjsong/api/v1.0/song/<string:song_key>/tags/<string:tags>', methods=['DELETE'])
+def delete_tag(song_key=None, tags=None):
+    cnx = kjwlib.db_maintain_connect()
+    try:
+        tag_list = [t.strip().lower() for t in tags.split(',')]
+        kjwlib.delete_tags(cnx, song_key, tag_list)
+        cnx.commit()
+        cnx.close()
+        return make_response(jsonify({'status':'ok','deleted':tag_list}))
+    except Exception as e:
+        cnx.rollback()
+        cnx.close()
+        print(type(e))
+        print(e)
+        abort(400)
+        
+@app.route('/kjsong/api/v1.0/song', methods=['PUT','POST','PATCH'])
+def update_songs():
+    if not request.json:
+        abort(400)
+    if 'key' in request.json:
+        return update_song()
+    elif 'songs' in request.json:
+        cnx = kjwlib.db_maintain_connect()
+        try:
+            for song in request.json['songs']:
+                if request.method != 'POST':
+                    if request.method == 'PUT':
+                        kjwlib.kjwtools.clean_lyrics(cnx, song['key'])
+                    kjwlib.put_song(cnx, song)
+                else:
+                    kjwlib.post_song(cnx, song)
+            cnx.commit()
+            cnx.close()
+            return make_response(jsonify({'status':'ok'}))
+        except Exception as e:
+            cnx.rollback()
+            cnx.close()
+            print(type(e))
+            print(e)
+            abort(404)
+    else:
+        abort(400)
+
+@app.route('/kjsong/api/v1.0/book/<string:book_key>', methods=['GET'])
+def get_book(book_key):
+    try:
+        cnx = kjwlib.db_search_connect()
+        book = kjwlib.get_songbook(cnx, book_key)
+        cnx.close()
+        return kjw_jsonify(book)
+    except Exception as e:
+        print(e)
+        abort(404)
+
+@app.route('/kjsong/api/v1.0/book', methods=['PUT','POST'])
+@app.route('/kjsong/api/v1.0/book/<string:book_key>', methods=['PUT','POST'])
+def update_book(book_key=None):
+    if not request.json or ('key' not in request.json and not book_key):
+        abort(400)
+    cnx = kjwlib.db_maintain_connect()
+    try:
+        if not 'key' in request.json:
+            request.json['key'] = book_key
+        if request.method == 'PUT':
+            kjwlib.put_songbook(cnx, request.json)
+        else:
+            kjwlib.post_songbook(cnx, request.json)
+        cnx.commit()
+        cnx.close()
+        return get_book(request.json['key'])
+    except Exception as e:
+        cnx.rollback()
+        cnx.close()
+        print(e)
+        abort(404)
+
+@app.route('/kjsong/api/v1.0/tune', methods=['GET'])
+def get_tunes():
+    try:
+        cnx = kjwlib.db_search_connect()
+        if request.json:
+            tunes = kjwlib.get_tunes(cnx, request.json)
+        else:
+            tunes = kjwlib.get_tunes(cnx)
+        cnx.close()
+        return kjw_jsonify({'tunes':tunes})
+    except Exception as e:
+        print(e)
+        abort(404)
+
+@app.route('/kjsong/api/v1.0/tune/<string:tune_key>', methods=['GET'])
+@app.route('/kjsong/api/v1.0/tune/<string:tune_key>/<string:sfx>', methods=['GET'])
+def get_tune(tune_key, sfx=None):
+    try:
+        cnx = kjwlib.db_search_connect()
+        stripped = True if sfx and sfx=='stripped' else False
+        tune = kjwlib.get_tune(cnx, tune_key, stripped)
+        cnx.close()
+        return kjw_jsonify(tune)
+    except Exception as e:
+        print(e)
+        abort(404)
+
+@app.route('/kjsong/api/v1.0/tune', methods=['PUT','POST'])
+@app.route('/kjsong/api/v1.0/tune/<string:tune_key>', methods=['PUT','POST'])
+def update_tune(tune_key=None):
+    if not request.json or ('tunes' not in request.json and 'key' not in request.json and not tune_key):
+        abort(400)
+    cnx = kjwlib.db_maintain_connect()
+    try:
+        if not 'key' in request.json and 'tunes' not in request.json:
+            request.json['key'] = tune_key
+        if request.method == 'PUT':
+            if 'tunes' in request.json:
+                for tune in request.json['tunes']:
+                    print(tune['key'])
+                    kjwlib.put_tune(cnx, tune)
+            else:
+                kjwlib.put_tune(cnx, request.json)
+        else:
+            if 'tunes' in request.json:
+                for tune in request.json['tunes']:
+                    kjwlib.post_tune(cnx, tune)
+            else:
+                kjwlib.post_tune(cnx, request.json)
+        cnx.commit()
+        cnx.close()
+        return get_tune(request.json['key']) if 'key' in request.json else jsonify({'status':'ok'})
+    except Exception as e:
+        cnx.rollback()
+        cnx.close()
+        print(e)
+        abort(404)
+
+
+@app.route('/kjsong/api/v1.0/person', methods=['GET'])
+def get_persons():
+    try:
+        cnx = kjwlib.db_search_connect()
+        if request.json:
+            persons = kjwlib.get_persons(cnx, request.json)
+        else:
+            persons = kjwlib.get_persons(cnx)
+        cnx.close()
+        return kjw_jsonify({'persons':persons})
+    except Exception as e:
+        print(type(e))
+        print(e)
+        abort(404)
+
+@app.route('/kjsong/api/v1.0/person/<string:person_key>', methods=['GET'])
+def get_person(person_key):
+    try:
+        cnx = kjwlib.db_search_connect()
+        person = kjwlib.get_person(cnx, person_key)
+        cnx.close()
+        return kjw_jsonify(person)
+    except Exception as e:
+        print(type(e))
+        print(e)
+        abort(404)
+
+@app.route('/kjsong/api/v1.0/person/<string:person_key>', methods=['PUT','POST'])
+def update_person(person_key=None):
+    if not request.json or ('key' not in request.json and not person_key):
+        abort(400)
+    cnx = kjwlib.db_maintain_connect()
+    try:
+        if not 'key' in request.json:
+            request.json['key'] = person_key
+        if request.method == 'PUT':
+            kjwlib.put_person(cnx, request.json)
+        else:
+            kjwlib.post_person(cnx, request.json)
+        cnx.commit()
+        cnx.close()
+        return get_person(request.json['key'])
+    except Exception as e:
+        cnx.rollback()
+        cnx.close()
+        print(e)
+        abort(404)
+        
+@app.route('/kjsong/api/v1.0/person', methods=['PUT','POST'])
+def update_persons():
+    if not request.json:
+        abort(400)
+    if 'key' in request.json:
+        return update_person(request.json['key'])
+    elif 'persons' in request.json:
+        cnx = kjwlib.db_maintain_connect()
+        try:
+            for person in request.json['persons']:
+                if request.method == 'PUT':
+                    kjwlib.put_person(cnx, person)
+                else:
+                    kjwlib.post_person(cnx, person)
+            cnx.commit()
+            cnx.close()
+            return make_response(jsonify({'status':'ok'}))
+        except Exception as e:
+            cnx.rollback()
+            cnx.close()
+            print(type(e))
+            print(e)
+            abort(404)
+    else:
+        abort(400)
+
+@app.route('/kjsong/api/v1.0/person/<string:person_key>/name', methods=['PATCH'])
+@app.route('/kjsong/api/v1.0/person/<string:person_key>/name/<string:nm>', methods=['PATCH'])
+def update_person_name(person_key=None, nm=None):
+    cnx = kjwlib.db_maintain_connect()
+    try:
+        names = nm.split(';') if nm else request.json['name']
+        if not names:
+            abort(400)
+        kjwlib.patch_person_name(cnx, person_key, names)
+        cnx.commit()
+        cnx.close()
+        return get_person(person_key)
+    except Exception as e:
+        cnx.rollback()
+        cnx.close()        
+        print(type(e))
+        print(e)
+        abort(400)
+
+@app.route('/kjsong/api/v1.0/person/<string:person_key>/merge/<string:person_merge_key>', methods=['PATCH'])
+def merge_persons(person_key=None, person_merge_key=None):
+    cnx = kjwlib.db_maintain_connect()
+    try:
+        kjwlib.merge_persons(cnx, person_key, person_merge_key)
+        cnx.commit()
+        cnx.close()
+        return make_response(jsonify({'status':'ok'}))
+    except Exception as e:
+        cnx.rollback()
+        cnx.close()
+        print(type(e))
+        print(e)
+        abort(400)
+        
+@app.route('/kjsong/api/v1.0/metre/<string:key>/<string:metre>', methods=['POST'])
+def add_new_base_metre(key, metre):
+    cnx = kjwlib.db_maintain_connect()
+    try:
+        m_id,m_key,_ = kjwlib.find_or_create_metre(cnx, {'key':key,'string':metre})
+        cnx.commit()
+        cnx.close()
+        return make_response(jsonify({'status':'ok'}))
+    except Exception as e:
+        cnx.rollback()
+        cnx.close()
+        print(type(e))
+        print(e)
+        abort(400)
+        
+if __name__ == '__main__':
+    app.run(debug=True)

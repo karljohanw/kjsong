@@ -1,0 +1,38 @@
+#!/usr/bin/env python
+
+# python cmu2db.py | env LANG="en_US.UTF-8" sort | uniq | less
+
+import os, json
+
+def patternize(init):
+    rvec = []
+    pn = init.replace('0','U')
+    pn = pn.replace('1','X')
+    pn2 = None
+    if '2' in pn:
+        if not 'U' in pn:
+            pn = pn.replace('2','U')
+        else:
+            pn1 = pn.replace('2','U')
+            pn = pn.replace('2','X')
+    rvec.append(pn)
+    if pn2: rvec.append(pn2)
+    return rvec
+    
+with open(os.path.join(os.path.dirname(__file__), 'cmudict.json')) as json_file:
+    cmu = json.load(json_file)
+
+db_vec = []
+for word, phonems in cmu.items():
+    for phonem in phonems:
+        init_pattern = ''.join([p[-1] for p in phonem if p[-1] in '012'])
+        for pattern in patternize(init_pattern):
+            if pattern=='X': pattern='U'
+            db_vec.append((word, pattern.count('X'), pattern.count('U'), pattern))
+
+for (w,x,u,s) in db_vec:
+    print('eng\t'+w+'\t'+str(x)+'\t'+str(u)+'\t'+s+'\t0')
+
+    # min_syllables = min(phonem)
+    # pronunciation_string = str(''.join(min_syllables))
+    # stress_numbers       = ''.join([x.replace('2', '1') for x in pronunciation_string if x.isdigit()]) # not interested in secondary stress
