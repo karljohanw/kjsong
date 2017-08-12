@@ -1,6 +1,0 @@
-#!/bin/bash
-
-while read -r; do
-    [ ! -z "${REPLY}" ] && echo "`nwalign ${REPLY}`" | ./gcm
-done
-
