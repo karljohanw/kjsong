@@ -99,3 +99,12 @@ ENV/
 
 # mypy
 .mypy_cache/
+
+#Database backups
+kjsong.*/
+cmudict.json
+Words.txt
+
+# "sandbox" file names
+appl.txt
+edit.txt
