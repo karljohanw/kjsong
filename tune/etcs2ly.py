@@ -10,10 +10,10 @@ def nr2Note(nr, key=0):
     c = chr((id_key_start[key] + int(nr[0])-1)%7 + ord('a'))
     if key<0 and c in to_sharp_flat[key:]:
         if not (len(nr)>1 and nr[1]=='#'):
-            c+='es'
+            c+=('es'+('es' if len(nr)>1 else ''))
     elif key>0 and c in to_sharp_flat[:key]:
         if not (len(nr)>1 and nr[1]=='b'):
-            c+='is'
+            c+=('is'+('is' if len(nr)>1 else ''))
     else:
         if len(nr)>1:
             c+=('is' if nr[1]=='#' else 'es')
