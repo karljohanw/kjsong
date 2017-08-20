@@ -1,5 +1,5 @@
 amazing_grace
-CM-2
+8I.6I-2
 %god,grace,hymn
 
 eng
@@ -85,7 +85,7 @@ rus
 
 swe
 @westrin_kj 2014 n/a 1989- Karl Johan Westrin;K.J. Westrin
-#Den vanligaste svenska översättningarna, bl.a. den av Andreas Frostensson, kan vara copyrightskyddade a.t.m. (2016).
+#De vanligaste svenska översättningarna, bl.a. den av Andreas Frostensson, kan vara copyrightskyddade a.t.m. (2016).
 1v
 Otrolig nåd (vad vackert namn)
  -mig frälst, ett uselt vrak!
@@ -123,7 +123,7 @@ Vårt lov till Herren än består
  -som första årets fjol
 ===
 vaart_land
-CM-1;LM-2;CM-1
+8I.6I-1;8I-2;8I.6I-1
 %anthem,patience,patriotic,poverty,war
 
 swe
@@ -208,7 +208,7 @@ Och högre klinga skall en gång
 
 eng
 @krook_anna 1906 n/a 1850-1926 Anna Sofia Krook;Anna S. Krook;Anna Krook;A.S. Krook;A. Krook
-#There exists several other english (singable) translations as well, complete or incomplete. The one presented here is probably the most popular.
+#There exists several other English (singable) translations as well, complete or incomplete. The one presented here is probably the most popular.
 1v
 Our land, our land, our Fatherland!
  -Ring out, dear word, oh sound!

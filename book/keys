@@ -1,2 +1,0 @@
-#!/bin/bash
-mysql -usearcher -ppassword kjsong -B -e "SELECT sb,sb_key FROM Songbook ORDER BY sb_key" | tail -n +2
