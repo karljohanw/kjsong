@@ -82,6 +82,15 @@ def da_al(note, segno=False, coda=False, volt=False):
     rval = [n for n in (volta(note[0:c]) + ([] if a==c else volta(note[s:a], not volt)) + volta(note[c:])) if not (n=='$' or n=='C' or n=='¤' or n=='F')]
     return rval
 
+def deal_with_dots(time, tm):
+    while time and time[0]=='.':
+        time=time[1:]
+        tm+='.'
+    if time and time[0]==',':
+        time=time[1:]
+        tm+='\\fermata'
+    return time, tm
+
 def merge_nrs(note, time, chords=[]):
     rval = []
     nlen = len(note)
@@ -110,9 +119,7 @@ def merge_nrs(note, time, chords=[]):
                 t = time[0]
                 tm = str( 1<<(ord(t)-ord('a')) )
                 time = time[1:]
-                while time and time[0]=='.':
-                    time=time[1:]
-                    tm+='.'
+                time, tm = deal_with_dots(time, tm)
                 rval.append(['r' , tm])
                 if chords:
                     rval[-1].append(chords[0])
@@ -130,9 +137,7 @@ def merge_nrs(note, time, chords=[]):
                         i+=1
                 if t in 'klmnopqrst':
                     tm = str( 1<<(ord(t)-ord('k')) )
-                    while time and time[0]=='.':
-                        time=time[1:]
-                        tm+='.'
+                    time, tm = deal_with_dots(time, tm)
                     rval.append(['r' , tm])
                     if chords:
                         chords = chords[1:]
@@ -140,9 +145,7 @@ def merge_nrs(note, time, chords=[]):
                     done = True
                 if t in '1234567890':
                     t = str( 1 << int(t) )
-                    while time and time[0]=='.':
-                        time=time[1:]
-                        t+='.'
+                    time, t = deal_with_dots(time, t)
                     rval.append([n,t])
                     if chords:
                         rval[-1].append(chords[0])
@@ -391,6 +394,7 @@ def harm2vec(harm):
 def tune2frac(tune):
     dots = 0
     if isinstance(tune, str):
+        tune = tune.strip('\\fermata')
         while tune and tune[-1]=='.':
             tune = tune[:-1]
             dots += 1

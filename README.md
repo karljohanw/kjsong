@@ -104,6 +104,7 @@ Since the traditional Tune Code System omitts note lengths and rests, and there 
     - a...j if the rest is assumed to "cling" to the next note (useful when dealing with reprises/alt. endings/codas etc.)
     - Of course, a/k is a whole rest, b/l is a half rest etc.
 - If a note/rest is dotted, one (or two) dots will follow the digit/letter.
+- If a fermata is supposed to be placed on a note/rest, a comma will follow the digit/letter.
 - It is also possible to use braces for "reprising" a series of note length/rests.
 - A `-` will omitt the corresponding note in the "main" string.
 - A `_` will make the note played as two, with a slur connecting them, Ex.: `1_3` will play the note a one whole note and then as a quarter note.
