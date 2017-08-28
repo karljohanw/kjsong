@@ -488,13 +488,15 @@ def startdetect(tune_inp_str):
     mean = sum(rval)/len(rval)
     minval = min(rval)
     maxval = max(rval)
+    d = maxval - minval
+    best_key = [0,-2,3,1,-1,-3,2][(minval % 8) - 1 + min(2,int(max(0,d-11)))]
     print((mean, minval, maxval), file=sys.stderr)
-    if minval < -3 and -10 <= minval:
-        return "''"
-    elif -3 <= minval and minval < 6:
-        return "'"
-    elif 6 <= minval and minval < 13:
-        return ""
+    if minval < -4:
+        return "''", best_key
+    elif -4 <= minval and minval < 4:
+        return "'", best_key
+    elif 4 <= minval:
+        return "", best_key
 
 def detect_startpos(vector, start=None):
     try:
@@ -503,7 +505,7 @@ def detect_startpos(vector, start=None):
         sop_str = [v for v in vector if not v['name']][0]['code']
     soprano = only_notes(sop_str)
     if start is None:
-        start = startdetect(sop_str)
+        start, best_key = startdetect(sop_str)
     rval = {'':start,'soprano':start}
     try:
         alto = only_notes([v for v in vector if v['name']=='alto'][0]['code'])
@@ -517,7 +519,7 @@ def detect_startpos(vector, start=None):
         rval['bass'] = update_pos(rval['tenor'],'D') if is_lower(tenor, bass) else rval['tenor']
     except:
         pass
-    return rval
+    return rval, best_key
 
 #TODO(?): partial synccheck
 def synccheck(vector):
