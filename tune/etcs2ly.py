@@ -344,6 +344,10 @@ def all_numbers(vec, powr=True):
     svec = [ord(t)-ord('k') if t in 'klmnopqrst' else (int(t) if t in '1234567890' else (ord(t)-ord('a') if t in 'abcdefghij' else t)) for t in vec if t not in '{|()}[]']
     to_append = []
     for i in range(0,len(svec)):
+        try:
+            svec[i] = svec[i].strip('\\fermata')
+        except:
+            pass
         if svec[i]=='.':
             svec[i]=((int(svec[i-1]) + 1) if powr else (int(svec[i-1]) * 2))
         elif isinstance(svec[i], str):
