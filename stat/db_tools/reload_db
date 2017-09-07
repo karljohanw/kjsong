@@ -1,6 +1,6 @@
 #!/bin/bash
 mv Words.txt Words.$(date +%x).${$}.txt
 ./cmu2db > Words.txt
-./stat all >> Words.txt
+../stat all >> Words.txt
 mysql -uupdater -ppassword kjstats -e "DELETE FROM Words"
 mysql -uupdater -ppassword kjstats -e "LOAD DATA LOCAL INFILE \"${PWD}/Words.txt\" INTO TABLE Words"
