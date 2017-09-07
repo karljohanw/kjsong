@@ -7,6 +7,10 @@ from operator import attrgetter
 
 _vowels = "aeiouyåäöüóáéæø" #to be extended
 
+_first_syl_stress=['hun','cze','fin','ice']
+_penultima_stress=['epo','pol','wel','que']
+_ultima_stress=['fre','tur','arm']
+
 def db_maintain_connect():
     return mysql.connector.connect(host='localhost', user='updater', password='password',
                                    database='kjstats', charset='utf8', use_unicode = True)
@@ -63,6 +67,8 @@ def get_word(ldict, w, lang='eng'):
     if w in ldict:
         rval = [l for l in ldict[w] if l['flag']==0]
         return rval if rval else ldict[w]
+    elif (w[-2:]=="'s" or w[-2:]=="s'") and w[:-2] in ldict and lang=='eng':
+        return ldict[w[:-2]]
     elif w[-1]=='s' and w[:-1] in ldict and lang=='eng':
         return ldict[w[:-1]]
     else:

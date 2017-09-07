@@ -41,7 +41,7 @@ def generate_mdict(typ, ldict={}):
                         for orig_txt in txts:
                             txt = re.sub('[!?\.,“”„\;\:\-—\*_()]', ' ', orig_txt)
                             txt = txt.replace(',',' ')
-                            txt = re.sub('[‘’]', "", txt)
+                            txt = re.sub('[‘’]', "'", txt)
                             cnx = kjwstat.db_maintain_connect()
                             allocs = kjwstat.get_ml_allocation(cnx, txt, ldict[lyr['language']], lyr['language'])
                             cnx.close()
