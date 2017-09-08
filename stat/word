@@ -2,14 +2,15 @@
 
 import kjwstat,sys
 
-if len(sys.argv) != 3:
-    print("Wrong number of args!")
+if len(sys.argv) < 2:
+    print("usage: %s WORD [LANG]" % sys.argv[0])
     exit(1)
 
+lang = sys.argv[2].lower() if len(sys.argv)>2 else 'eng'
 cnx = kjwstat.db_maintain_connect()
-my_dict = kjwstat.get_lang_dict(cnx,sys.argv[1].lower())
+my_dict = kjwstat.get_lang_dict(cnx,lang)
 cnx.close()
 try:
-    print(my_dict[sys.argv[2].lower()])
+    print(my_dict[sys.argv[1].lower()])
 except KeyError:
     print("Word not found in dict!!")

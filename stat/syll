@@ -4,8 +4,8 @@ import sys
 from countsyl import count_syllables
 from kjwstat import _vowels
 
-if len(sys.argv) != 2:
-    print("Wrong number of args!")
+if len(sys.argv) < 2:
+    print("usage: %s WORD [LANG]" % sys.argv[0])
     exit(1)
 
-print(count_syllables(sys.argv[1],_vowels))
+print(count_syllables(sys.argv[1].lower(), _vowels, sys.argv[2] if len(sys.argv)>2 else 'eng'))
