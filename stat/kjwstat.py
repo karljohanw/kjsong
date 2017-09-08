@@ -72,7 +72,25 @@ def get_word(ldict, w, lang='eng'):
     elif w[-1]=='s' and w[:-1] in ldict and lang=='eng':
         return ldict[w[:-1]]
     else:
-        return [{'pattern': '?'*count_syllables(w, _vowels, lang)[0]}]
+        min_length, max_length = count_syllables(w, _vowels, lang)
+        rval=[]
+        fix_stress = None
+
+        if lang in _ultima_stress or (lang=='epo' and w[-1]=="'"):
+            fix_stress = -1
+        elif lang in _penultima_stress:
+            fix_stress = -2
+        elif lang in _first_syl_stress:
+            fix_stress = 0
+
+        for i in range(min_length, max_length+1):
+            pattern = ('?'*i) if ((fix_stress is None) or i==1) else ('U'*i)
+            if lang=='fre' and i==max_length and (w[-1]=='e' or w[-2:]=='es'):
+                fix_stress = -2
+            if pattern and '?' not in pattern:
+                pattern = (pattern[:fix_stress] + 'X' + (pattern[(fix_stress+1):] if fix_stress!=-1 else ''))
+            rval.append({'pattern':  pattern})
+        return rval
 
 def get_word_syllables(ldict, w):
     rval = None

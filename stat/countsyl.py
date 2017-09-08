@@ -16,7 +16,7 @@
 # Share and enjoy under the terms of the GPLv2 or later.
 
 def count_syllables(word, vowels = ['a', 'e', 'i', 'o', 'u'], lang='eng'):
-    on_vowel = False
+    on_vowel = None
     in_diphthong = False
     minsyl = 0
     maxsyl = 0
@@ -26,12 +26,9 @@ def count_syllables(word, vowels = ['a', 'e', 'i', 'o', 'u'], lang='eng'):
     for c in word:
         is_vowel = c in vowels
 
-        if on_vowel == None:
-            on_vowel = is_vowel
-
-        # y is a special case
-        if c == 'y':
-            is_vowel = not on_vowel
+        # y is a special case in english
+        if lang=='eng' and c == 'y':
+            is_vowel = (on_vowel==False)
 
         if is_vowel:
             if not on_vowel:
@@ -47,16 +44,22 @@ def count_syllables(word, vowels = ['a', 'e', 'i', 'o', 'u'], lang='eng'):
                 in_diphthong = True
                 if lang!='ger': #german language does not pronounce diphthongs over more syllables
                     maxsyl += 1
+        else:
+            in_diphthong = False
 
         on_vowel = is_vowel
         lastchar = c
 
     # Some special cases:
+    # Mute e if last in english word
     # KNOWN BUG: Will cause problem with words like "pipeline", answer 3 syllables but just 2
-    if word[-1] == 'e' and maxsyl>1 and not minsyl==1 and lang=='eng':
-        minsyl -= 1
-    # if it ended with a consonant followed by y, count that as a syllable.
-    if word[-1] == 'y' and not on_vowel:
-        maxsyl += 1
+    if lang=='eng' and word[-1] == 'e' and maxsyl>1 and not minsyl==1:
+        minsyl -= (not in_diphthong)
+        maxsyl -= 1
+    # Mute e or es if last in french word (but possible to pronounce to simulate a feminine rhyme)
+    if lang=='fre' and (word[-1]=='e' or word[-2:]=='es') and maxsyl>1 and not minsyl==1:
+        minsyl -= (not in_diphthong)
+    if lang=='hun' and word[-1]=='y' and maxsyl>1 and not minsyl==1:
+        minsyl -= (not in_diphthong)
 
     return (minsyl,maxsyl)
