@@ -512,6 +512,8 @@ def detect_startpos(vector, start=None):
     soprano = only_notes(sop_str)
     if start is None:
         start, best_key = startdetect(sop_str)
+    else:
+        best_key=0
     rval = {'':start,'soprano':start}
     try:
         alto = only_notes([v for v in vector if v['name']=='alto'][0]['code'])
