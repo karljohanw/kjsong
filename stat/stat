@@ -24,15 +24,29 @@ def get_dict_for_lyric(data, mydict, lang_dicts={}):
         for ver in lyr['verses']:
             if ver['type']=='v':
                 lines = get_first(intros,ver['no'])+ver['lines']+get_first(courus,ver['no'])
-                if len(lines) == len(metres):
-                    for i in range(0, len(metres)):
-                        txts = [(lines[i]['text'], lines[i].get('syllable-diff',0))]+[(a['text'], a.get('syllable-diff',0)) for a in lines[i].get('alts',[])]
+                equal_lines = len(lines) == len(metres)
+                equal_with_compression = len([l for l in lines if not l.get('compressable', False)]) == len(metres)
+                if equal_lines or equal_with_compression:
+                    l_idx = 0
+                    for m_idx in range(0, len(metres)):
+                        if equal_lines:
+                            txts = [(lines[l_idx]['text'], lines[l_idx].get('syllable-diff',0))]+[(a['text'], a.get('syllable-diff',0)) for a in lines[l_idx].get('alts',[])]
+                            l_idx+=1
+                        else:
+                            txt=lines[l_idx]['text']
+                            tot_diff=lines[l_idx].get('syllable-diff',0)
+                            while (lines[l_idx+1:] and lines[l_idx+1].get('compressable',False)):
+                                l_idx+=1
+                                txt+=lines[l_idx]['text']
+                                tot_diff+=lines[l_idx].get('syllable-diff',0)
+                            txts = [(txt, tot_diff)]
+                            l_idx+=1
                         for orig_txt,s_diff in txts:
                             if s_diff==0: #do something about diff-syll
                                 txt = re.sub('[!?\.,“”„\;\:\-—\*_()]', ' ', orig_txt)
                                 txt = txt.replace(',',' ')
                                 txt = re.sub('[‘’]', "", txt)
-                                for t in detect_verse_feets(txt, metres[i], lyr['language'], lang_dicts[lyr['language']]):
+                                for t in detect_verse_feets(txt, metres[m_idx], lyr['language'], lang_dicts[lyr['language']]):
                                     for a,b in t:
                                         if b=='X': b='U'
                                         mydict.setdefault(lyr['language'],{}).setdefault(a,{}).setdefault(b,0)
