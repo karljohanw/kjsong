@@ -494,7 +494,7 @@ def startdetect(tune_inp_str):
     maxval = max(rval)
     d = maxval - minval
     amend = min(2,int(max(0,d-11)))
-    best_key = [0,-2,3,1,-1,-3,2][(minval % 8) - 1 + amend]
+    best_key = [0,-2,3,1,-1,-3,2][((minval % 8) - 1 + amend)%7]
     print((mean, minval, maxval), file=sys.stderr)
     minval+=amend
     if minval < -4:
