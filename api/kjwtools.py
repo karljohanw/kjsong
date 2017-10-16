@@ -1090,7 +1090,7 @@ def set_song_lyrics(cnx, id, lyrics, orig_lang=None):
 verse_feets = {'I': "UX", 'T': "XU", 'D':"XUU", 'B':"UXU", 'P':"UUX"}
 
 def key_to_string(lines):
-    return ';'.join([''.join([verse_feets[m[-1]][i%len(verse_feets[m[-1]])] for i in range( 0, int(m[0:-1])) ]) for m in lines.split('.')])
+    return ';'.join([''.join([''.join([verse_feets[m[-1]][i%len(verse_feets[m[-1]])] for i in range( 0, int(m[0:-1]))]) for m in re.split('([0-9]+[A-Z])',me) if m]) for me in lines.split('.')])
 
 def generate_metres(metres):
     if metres.strip('.;-1234567890'+''.join(verse_feets.keys())): 

@@ -43,7 +43,7 @@ Here follows the formal definition of the "plotter" mode conerning lyrics. (The 
 
 <syllable> ::= X | U
 <verse_feet> ::= I | T | D | B | P
-<base_metre> ::= <integer><verse_feet> | <syllable>+
+<base_metre> ::= (<integer><verse_feet>)+ | <syllable>+
 <metre> ::= <base_metre>-<integer>{;<base_metre>-<integer>}
 
 <tags> ::= <tag>{,<tag>}
