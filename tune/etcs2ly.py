@@ -389,7 +389,7 @@ def harm2vec(harm):
         elif h=='\\':
             harmvec[-1] += ('\\%s' % harm[0])
             harm = harm[1:]
-        elif h in '01234567_' or not harmvec:
+        elif h in '01234567_{|}CF¤cf$' or not harmvec:
             harmvec.append(h)
         else:
             harmvec[-1] += h
