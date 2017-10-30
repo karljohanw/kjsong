@@ -351,7 +351,11 @@ def all_numbers(vec, powr=True):
         if svec[i]=='.':
             svec[i]=((int(svec[i-1]) + 1) if powr else (int(svec[i-1]) * 2))
         elif isinstance(svec[i], str):
-            if svec[i][-1]=='.':
+            if svec[i][-2]=='.':
+                svec[i] = int(svec[i][:-2])
+                to_append.append(((int(svec[i-2])+2) if powr else (int(svec[i]) * 4)))
+                to_append.append(((int(svec[i-2])+1) if powr else (int(svec[i]) * 2)))
+            elif svec[i][-1]=='.':
                 svec[i] = int(svec[i][:-1])
                 to_append.append(((int(svec[i-1])+1) if powr else (int(svec[i]) * 2)))
             else:
