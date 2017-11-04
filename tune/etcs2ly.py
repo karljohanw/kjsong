@@ -226,41 +226,53 @@ def add_markup(rval, markup):
         rval.append(olde)
     else:
         rval.append(markup)
-    
+
+def add_rep_cmd(rval, text):
+    if rval and "\set Score.repeatCommands = #'(" in rval[-1]:
+        rval[-1] = '%s %s)' % (rval[-1][0:-1], text)
+    else:
+        rval.append("\set Score.repeatCommands = #'(%s)" % text)
+
 def to_ly(inp, pos=',', key=0, time=1.0, anacrusis=[]):
     rval = []
     inalt, conrep, fine, segn = None, False, False, False
     nextsegn, codpos, nextaltend = False, None, False
-    altbeg = '} \\alternative {{'
     finetext = '\\mark \\markup { \\small "Fine" }'
     finebar = '\\bar "."'
     alttime = None
     first = True
+    repeatnest,past_nest = 0,False
+    volta_nr=[['1','1, 3'],['2','2, 4']]
     for i in inp:
         if i=='U' or i=='D':
             pos = update_pos(pos, i)
         elif i=='{':
             if rval and rval[-1] == finebar:
                 rval = rval[0:-1]
-            rval.append('\\repeat volta 2 {')
             if not first:
                 anacrusis = []
+                add_rep_cmd(rval, 'start-repeat')
+            repeatnest+=1
         elif i=='|':
-            rval.append(altbeg)
+            if past_nest and '(volta "2, 4")' in rval[-1]: rval[-1] = rval[-1].replace('(volta "2, 4")','')
+            add_rep_cmd(rval, '(volta "%s")' % ('2' if past_nest else volta_nr[0][repeatnest-1]))
             inalt = pos
             alttime = [str(1<<int(a)) for a in anacrusis]
         elif i=='}':
-            if rval[-1] == altbeg:
+            if '(volta "' in rval[-1]:
+                hasvoltafinal = ('(volta #f)' in rval[-1])
                 rval = rval[0:-1]
                 if rval[-1] == finebar: rval=rval[0:-1]
-                rval.append('}')
+                if hasvoltafinal: add_rep_cmd(rval, '(volta #f)')
+                add_rep_cmd(rval, 'end-repeat')
                 pos = inalt
                 inalt = None
             else:
                 if rval[-1] == finebar: rval=rval[0:-1]
-                rval.append('}')
                 if inalt is not None:
-                    rval.append('{')
+                    add_rep_cmd(rval, '(volta #f)')
+                    add_rep_cmd(rval, 'end-repeat')
+                    add_rep_cmd(rval, '(volta "%s")' % ('4' if past_nest else volta_nr[1][repeatnest-1]))
                     pos = inalt
                     val, times = unify(alttime, False)
                     modulo = times%int(val*time)
@@ -272,6 +284,10 @@ def to_ly(inp, pos=',', key=0, time=1.0, anacrusis=[]):
                     inalt = None
                     anacrusis = []
                     nextaltend = True
+                else:
+                    add_rep_cmd(rval, 'end-repeat')
+            repeatnest-=1
+            past_nest = (repeatnest==1)
         elif i=='F' or i=='f':
             rval.append(finetext)
             rval.append(finebar)
@@ -296,7 +312,7 @@ def to_ly(inp, pos=',', key=0, time=1.0, anacrusis=[]):
             if olde[0]!='}': rval.append('\\bar "||"')
             pos = codpos
         elif i=='(' or i==')' or len(i)==1:
-            if rval[-1][-1] == '}' or rval[-1][1:5]=='mark':
+            if rval[-1] == "\set Score.repeatCommands = #'((volta #f))" or rval[-1][1:5]=='mark':
                 olde = rval[-1]
                 rval[-1]=i
                 rval.append(olde)
@@ -312,14 +328,18 @@ def to_ly(inp, pos=',', key=0, time=1.0, anacrusis=[]):
                 rval.append('\\segno')
                 nextsegn = False
             if nextaltend:
-                rval.append('}}')
+                add_rep_cmd(rval, '(volta #f)')
                 nextaltend = False
         first = False
-    if rval[-1][0]!='}': rval.append('\\bar "|."')
+    if 'end-repeat' not in rval[-1] and 'partial' not in rval[-1]: rval.append('\\bar "|."')
     if fine:
+        if 'partial' in rval[-1]: rval = rval[0:-1]
+        if '(volta "' in rval[-1]:
+            rval[-1] = rval[-1].replace('(volta "2, 4")','').replace('(volta "4")','').replace('(volta "2")','')
+            nextaltend=False
         rval.append('\\mark \\markup { \\small "D.%s.%s al Fine" }' % ('S' if segn else 'C', ' con rep.' if conrep else ''))
     if nextaltend:
-        rval.append('}}')
+        add_rep_cmd(rval, '(volta #f)')
     return ' '.join(rval)
 
 def to_ly_harm(inp, key=0):
