@@ -301,15 +301,12 @@ def to_ly(inp, pos=',', key=0, time=1.0, anacrusis=[]):
             segn = True
             nextsegn = True
         elif i=='¤':
-            olde, volde = rval[-1], None
-            if olde==')':
-                volde= rval[-2]
-            rval[-1 if not volde else -2] = ('\\mark \\markup { \\small "D.%s.%s al Coda" }' % ('S' if segn else 'C', ' con rep.' if conrep else ''))
-            if volde:
-                rval[-1] = volde
-            rval.append(olde)
+            idx = -1
+            while rval[idx][0] not in 'abcdefgr':
+                idx-=1
+            rval = rval[:idx] + ['\\mark \\markup { \\small "D.%s.%s al Coda" }' % ('S' if segn else 'C', ' con rep.' if conrep else '')] + rval[idx:]
             rval.append('\\mark \\markup { \\musicglyph #"scripts.coda" }')
-            if olde[0]!='}': rval.append('\\bar "||"')
+            if 'end-repeat' not in rval[-2]: rval.append('\\bar "||"')
             pos = codpos
         elif i=='(' or i==')' or len(i)==1:
             if rval[-1] == "\set Score.repeatCommands = #'((volta #f))" or rval[-1][1:5]=='mark':
