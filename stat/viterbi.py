@@ -3,18 +3,20 @@
 # Implementation stolen from Wikipedia (https://en.wikipedia.org/wiki/Viterbi_algorithm)
 # Haha, how gangsta I am...
 
+from math import log
+
 def viterbi(obs, states, start_p, trans_p, emit_p):
     V = [{}]
     for st in states:
-        V[0][st] = {"prob": start_p[st] * emit_p[st][obs[0]], "prev": None}
+        V[0][st] = {"prob": log(start_p[st]) + log(emit_p[st][obs[0]]), "prev": None}
     # Run Viterbi when t > 0
     for t in range(1, len(obs)):
         V.append({})
         for st in states:
-            max_tr_prob = max(V[t-1][prev_st]["prob"]*trans_p[prev_st][st] for prev_st in states)
+            max_tr_prob = max(V[t-1][prev_st]["prob"]+log(trans_p[prev_st][st]) for prev_st in states)
             for prev_st in states:
-                if V[t-1][prev_st]["prob"] * trans_p[prev_st][st] == max_tr_prob:
-                    max_prob = max_tr_prob * emit_p[st][obs[t]]
+                if V[t-1][prev_st]["prob"] + log(trans_p[prev_st][st]) == max_tr_prob:
+                    max_prob = max_tr_prob + log(emit_p[st][obs[t]])
                     V[t][st] = {"prob": max_prob, "prev": prev_st}
                     break
     opt = []
@@ -31,4 +33,4 @@ def viterbi(obs, states, start_p, trans_p, emit_p):
     for t in range(len(V) - 2, -1, -1):
         opt.insert(0, V[t + 1][previous]["prev"])
         previous = V[t + 1][previous]["prev"]
-    return (''.join(opt),max_prob)
+    return (opt,max_prob)

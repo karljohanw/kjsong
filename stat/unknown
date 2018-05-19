@@ -66,6 +66,7 @@ def viterbi_cover(odict):
         if obs[-3]=='u' and obs[-2]=='u':
             obs=obs[:-1]+'x'
         opt,prob = viterbi(obs,states,start_probab,trans_probab,emiss_probab)
+        opt = ''.join(opt)
         if opt[-3]=='U' and opt[-2]=='U':
             opt=opt[:-1]+'X'
         vdict[no]=opt
