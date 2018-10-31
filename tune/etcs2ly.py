@@ -66,6 +66,8 @@ def volta(note, excl=False, idx=0, a='{', b='}', times=1):
         return [n for n in note if not (n==a or n=='|' or n==b)]
     if s < m or s < e:
         return volta(note, excl, s+1, a, b, times)
+    elif note[0]=='$' and excl and (m < e):
+        return (note[1:m] + note[e+1:])
     else:
         return volta((note[:idx-1] + (times*([] if excl else [n for n in note[idx:e] if n!='|']) + note[idx:min(m,e)])) + note[e+1:], excl, 0, a, b, times)
 
