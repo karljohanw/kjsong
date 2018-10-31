@@ -1,0 +1,25 @@
+#!/usr/bin/python
+
+import sys, kjwstat
+from viterbi import viterbi
+
+def viterbi_cover(cnx, observation, states=None, start='1',threshold=0.0):
+    if states:
+        states=states.split(',')
+    trans_probab=kjwstat.get_harmony_transition_probabilities(cnx, states, float(threshold))
+    #print(trans_probab,file=sys.stderr)
+    emiss_probab=kjwstat.get_harmony_emisson_probabilities(cnx, states)
+    #print(emiss_probab,file=sys.stderr)
+    if not states:
+        states=trans_probab.keys()
+    start_probab={state:0.00000001 for state in states}
+    start_probab[start]=(1.0-0.00000001)
+    return viterbi(observation,states,start_probab,trans_probab,emiss_probab)
+
+cnx = kjwstat.db_maintain_connect()
+obs = [line[0:-1] for line in sys.stdin]
+kwargs = {s[0]: s[1].strip('"') for s in [a.split('=') for a in sys.argv[1:]]}
+opt,prob = viterbi_cover(cnx,obs,**kwargs)
+for o in opt: print(o, end=' ')
+print()
+#print(opt)

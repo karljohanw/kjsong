@@ -8,15 +8,15 @@ from math import log
 def viterbi(obs, states, start_p, trans_p, emit_p):
     V = [{}]
     for st in states:
-        V[0][st] = {"prob": log(start_p[st]) + log(emit_p[st][obs[0]]), "prev": None}
+        V[0][st] = {"prob": log(start_p[st]) + log(emit_p[st].get(obs[0],0.00000001)), "prev": None}
     # Run Viterbi when t > 0
     for t in range(1, len(obs)):
         V.append({})
         for st in states:
-            max_tr_prob = max(V[t-1][prev_st]["prob"]+log(trans_p[prev_st][st]) for prev_st in states)
+            max_tr_prob = max(V[t-1][prev_st]["prob"]+log(trans_p[prev_st].get(st,0.0000001)) for prev_st in states)
             for prev_st in states:
-                if V[t-1][prev_st]["prob"] + log(trans_p[prev_st][st]) == max_tr_prob:
-                    max_prob = max_tr_prob + log(emit_p[st][obs[t]])
+                if V[t-1][prev_st]["prob"] + log(trans_p[prev_st].get(st,0.0000001)) == max_tr_prob:
+                    max_prob = max_tr_prob + log(emit_p[st].get(obs[t],0.0000001))
                     V[t][st] = {"prob": max_prob, "prev": prev_st}
                     break
     opt = []

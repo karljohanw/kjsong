@@ -587,6 +587,54 @@ def theheader(vector):
     rval+='}\n'
     return rval
 
+### FUNCTIONS REGARDING HMMS
+def trim_observation(chunk):
+    l = len(chunk)
+    if (l<2):
+        return chunk
+    elif (l==2):
+        return (chunk[0] if chunk[0]==chunk[1] else chunk)
+    else:
+        a = trim_observation(chunk[0:(l//2)])
+        b = trim_observation(chunk[(l//2):])
+        al,bl = len(a), len(b)
+        if (al == bl):
+            if a==b:
+                return a
+            else:
+                return a+b
+        else:
+            if al<bl:
+                return ((a*(bl//al)) + b)
+            else:
+                return (a + (b*(al//bl)))
+    return chunk
+
+def merge_to_observation(vector, time=1.0, tt_start=0.0):
+    vec = [v for v in vector if v!='U' and v!='D' and v!='(' and v!=')']
+    rval, chunk = [], ''
+    max_denominator = max([int(t[1].strip('.').strip('\\fermata')) for t in vec if len(t)==2])
+    max_pieces = int(max_denominator * time)
+    chunk = ('0' * int(max_denominator * (time-tt_start))) if (tt_start>0.01) else ''
+    for v in vec:
+        try:
+            (h,t) = v
+            h = '0' if h=='r' else h
+            h = chr(ord(h[0:-1])+16) if h[-1]=='#' else h
+            h = chr(ord(h[0:-1])+24) if h[-1]=='b' else h
+            td = int(tune2frac(t) * max_denominator)
+            chunk += h*td
+            while len(chunk) >= max_pieces:
+                rval.append(trim_observation(chunk[0:max_pieces]))
+                chunk = chunk[max_pieces:]
+        except ValueError:
+            if chunk:
+                print("WARNING! SOME FUZZ (%s, %s) IN THE MIDDLE OF A BEAT!" % (chunk, v) , file=sys.stderr)
+                raise ValueError("WARNING! SOME FUZZ (%s, %s) IN THE MIDDLE OF A BEAT!" % (chunk, v))
+            rval.append(v)
+    return rval
+###
+
 def etcs2ly(vector, startpos=None, rythmvar=None, harmvar=None, key=0, tempo=100, force_harm=False, compact=True, instr='choir aahs', chord_instr='acoustic guitar (nylon)'):
     key=int(key)
     header = ''
