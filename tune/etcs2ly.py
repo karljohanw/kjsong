@@ -57,6 +57,19 @@ def kjw_index(s, c, *args, **kwargs):
 def to_max(i, length):
     return i if i!=-1 else length
 
+def get_rid_of_alternate_middles(note, idx=0):
+    if '/' not in note:
+        return note
+    a=kjw_index(note, '/', idx)
+    b=kjw_index(note, '/', a+1)
+    c=kjw_index(note, '/', b+1)
+    m=kjw_index(note, '|', c+1)
+    e=kjw_index(note, '}', c+1)
+    if m==-1:
+        return list(note[0:a])+['|']+list(note[a+1:b])+list(note[c+1:e])+['}']+list(note[b+1:c])+list(note[c+1:e])+list(note[e+1:])
+    else:
+        return list(note[0:a])+['|']+list(note[a+1:b])+list(note[c+1:m])+list(note[m+1:e])+['}']+list(note[b+1:c])+list(note[c+1:m])+list(note[e+1:])
+
 def volta(note, excl=False, idx=0, a='{', b='}', times=1):
     l = len(note)
     s = to_max(kjw_index(note, a,idx), l)
@@ -175,6 +188,8 @@ def time_len(time):
     return len([i for i in time if i in '1234567890-']) - len([i for i in time if i in '_'])
 
 def unmerge(note):
+    while '/' in note:
+        note = get_rid_of_alternate_middles(note)
     volt = True if 'c' in note or 'f' in note else False
     note = [('C' if n=='c' else ('F' if n=='f' else n)) for n in note]
     if 'C' in note or 'F' in note or '¤' in note or '$' in note:
@@ -235,6 +250,14 @@ def add_rep_cmd(rval, text):
     else:
         rval.append("\set Score.repeatCommands = #'(%s)" % text)
 
+def add_alttime(rval, alttime, time, inalt, anacrusis):
+    val, times = unify(alttime, False)
+    modulo = times%int(val*time)
+    if modulo:
+        rval.append("\\partial %s*%s" % (val, modulo))
+    elif inalt and anacrusis:
+        rval.append("\\partial %s*%s" % (16, int(16*time)))
+
 def to_ly(inp, pos=',', key=0, time=1.0, anacrusis=[]):
     rval = []
     inalt, conrep, fine, segn = None, False, False, False
@@ -244,6 +267,7 @@ def to_ly(inp, pos=',', key=0, time=1.0, anacrusis=[]):
     alttime = None
     first = True
     repeatnest,past_nest = 0,False
+    inaltmiddle = 0
     volta_nr=[['1','1, 3'],['2','2, 4']]
     for i in inp:
         if i=='U' or i=='D':
@@ -255,7 +279,26 @@ def to_ly(inp, pos=',', key=0, time=1.0, anacrusis=[]):
                 anacrusis = []
                 add_rep_cmd(rval, 'start-repeat')
             repeatnest+=1
+        elif i=='/':
+            if inaltmiddle==0:
+                add_rep_cmd(rval, '(volta "1")')
+                alttime = [str(1<<int(a)) for a in anacrusis]
+                inalt = pos
+            elif inaltmiddle==1:
+                add_rep_cmd(rval, '(volta #f)')
+                add_rep_cmd(rval, '(volta "2")')
+                add_alttime(rval, alttime, time, inalt, anacrusis)
+                alttime=None
+                pos = inalt
+                inalt = None
+            elif inaltmiddle==2:
+                add_rep_cmd(rval, '(volta #f)')
+                add_rep_cmd(rval, '(volta "1, 2")')
+            inaltmiddle+=1
         elif i=='|':
+            if inaltmiddle:
+                add_rep_cmd(rval, '(volta #f)')
+                inaltmiddle = 0
             if past_nest and '(volta "2, 4")' in rval[-1]: rval[-1] = rval[-1].replace('(volta "2, 4")','')
             add_rep_cmd(rval, '(volta "%s")' % ('2' if past_nest else volta_nr[0][repeatnest-1]))
             inalt = pos
@@ -265,7 +308,9 @@ def to_ly(inp, pos=',', key=0, time=1.0, anacrusis=[]):
                 hasvoltafinal = ('(volta #f)' in rval[-1])
                 rval = rval[0:-1]
                 if rval[-1] == finebar: rval=rval[0:-1]
-                if hasvoltafinal: add_rep_cmd(rval, '(volta #f)')
+                if hasvoltafinal or inaltmiddle:
+                    add_rep_cmd(rval, '(volta #f)')
+                    inaltmiddle = 0
                 add_rep_cmd(rval, 'end-repeat')
                 pos = inalt
                 inalt = None
@@ -276,17 +321,15 @@ def to_ly(inp, pos=',', key=0, time=1.0, anacrusis=[]):
                     add_rep_cmd(rval, 'end-repeat')
                     add_rep_cmd(rval, '(volta "%s")' % ('4' if past_nest else volta_nr[1][repeatnest-1]))
                     pos = inalt
-                    val, times = unify(alttime, False)
-                    modulo = times%int(val*time)
-                    if modulo:
-                        rval.append("\\partial %s*%s" % (val, modulo))
-                    elif inalt and anacrusis:
-                        rval.append("\\partial %s*%s" % (16, int(16*time)))
+                    add_alttime(rval, alttime, time, inalt, anacrusis)
                     alttime = None
                     inalt = None
                     anacrusis = []
                     nextaltend = True
                 else:
+                    if inaltmiddle:
+                        add_rep_cmd(rval, '(volta #f)')
+                        inaltmiddle = 0
                     add_rep_cmd(rval, 'end-repeat')
             repeatnest-=1
             past_nest = (repeatnest==1)
