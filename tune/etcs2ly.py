@@ -121,6 +121,8 @@ def merge_nrs(note, time, chords=[]):
                 rval[-2][0]= rval[-2][0]+n
         elif n==')' and rval[-1] == '(':
             rval=rval[:-1]
+        elif n==')' and (rval[-1]=='U' or rval[-1]=='D') and rval[-2] == '(':
+            rval.pop(-2)
         elif n==')' and len(rval[-1])>1 and rval[-1][0]=='r':
             r = rval[-1]
             rval[-1] = ')'
