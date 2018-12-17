@@ -110,6 +110,7 @@ def merge_nrs(note, time, chords=[]):
     rval = []
     nlen = len(note)
     i=0
+    skip_next_start_brace,skip_next_end_brace=False,False
     while i<nlen:
         n = note[i]
         if n=='#' or n=='b':
@@ -127,6 +128,11 @@ def merge_nrs(note, time, chords=[]):
             r = rval[-1]
             rval[-1] = ')'
             rval.append(r)
+        elif n=='(' and skip_next_start_brace:
+            skip_next_start_brace=False
+            skip_next_end_brace=True
+        elif n==')' and skip_next_end_brace:
+            skip_next_end_brace=False
         elif n not in '1234567':
             rval.append(n)
         else:
@@ -152,6 +158,7 @@ def merge_nrs(note, time, chords=[]):
                         chords = chords[1:]
                     if t=='-' and i+1<nlen and note[i+1] in '#b':
                         i+=1
+                    skip_next_start_brace=(i+1<nlen and note[i+1]=='(')
                 if t in 'klmnopqrst':
                     tm = str( 1<<(ord(t)-ord('k')) )
                     time, tm = deal_with_dots(time, tm)
